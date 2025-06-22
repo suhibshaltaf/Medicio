@@ -1,0 +1,66 @@
+﻿@model PricingFormVM
+@section Header {
+    Pricing
+}
+@section loc {
+    edit
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Edit</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form asp-controller="Pricing" asp-action="Edit">
+            <div class="card-body">
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="Type">Questions</label>
+                    <input asp-for="Type" class="form-control" placeholder="Enter Questions ">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price">Description</label>
+                    <input asp-for="Price" class="form-control" placeholder="Enter answer">
+                </div>
+                <div class="form-group">
+                    <label asp-for="IsDeleted"></label>
+                    <input type="checkbox" asp-for="IsDeleted" />
+                    <span>@(Model.IsDeleted ? "Deleted" : "Active")</span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Features">Features</label>
+                    <div id="feature-fields">
+                        @for (int i = 0; i < Model.Features.Count; i++)
+                        {
+                            <input asp-for=Features value="@Model.Features[i]" class="form-control mb-2" placeholder="Enter Feature">
+                        }
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="add-feature">Add New Feature</button>
+                </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section script {
+    <script>
+        // Add new feature input
+        document.getElementById('add-feature').addEventListener('click', function () {
+            var featureFields = document.getElementById('feature-fields');
+
+            // Create new input field
+            var newFeatureInput = document.createElement('input');
+            newFeatureInput.name = "Features";
+            newFeatureInput.classList.add('form-control', 'mb-2');
+            newFeatureInput.placeholder = "Enter Feature";
+            featureFields.appendChild(newFeatureInput);
+        });
+    </script>
+}

@@ -1,0 +1,33 @@
+﻿@model DepartmentsDetailsVM
+@section Header {
+    Departments
+
+}
+@section loc {
+    details
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Details for @Model.Title</h3>
+        </div>
+        <ul>
+            <li>
+                
+                Description : @Model.Description
+            </li>
+            <li>
+                CreatedAT : @Model.CreatedAt
+            </li>
+            <li>
+                line : @Model.line
+            </li>
+            <li>
+                status : @(Model.IsDeleted ? "Deleted" : "Active")
+            </li>
+            <li>
+                imge : <img src="~/Files/images/Departments/@Model.ImageName" alt="Alternate Text" width="100px" />
+            </li>
+        </ul>
+    </div>
+</div>

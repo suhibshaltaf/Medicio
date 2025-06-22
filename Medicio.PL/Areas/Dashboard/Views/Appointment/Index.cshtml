@@ -1,0 +1,158 @@
+﻿@model IEnumerable<AppointmentVM>
+
+@section style {
+    <link href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+}
+
+@section Header {
+    Appointments
+}
+
+@section loc {
+    show
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Show All Appointments</h3>
+        </div>
+        <a asp-controller="Appointment" asp-action="Create" class="btn btn-outline-primary">Create</a>
+
+        <div class="card-body">
+            <table class="table table-bordered" id="appointmentsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Time Remaining</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var timeRemaining = item.AppointmentDate - DateTime.Now;
+                        string timeRemainingText;
+
+                        if (timeRemaining.TotalSeconds < 0)
+                        {
+                            timeRemainingText = "Appointment has passed"; // If the appointment has passed
+                        }
+                        else
+                        {
+                            var months = (item.AppointmentDate.Year - DateTime.Now.Year) * 12 + item.AppointmentDate.Month - DateTime.Now.Month;
+                            var days = (item.AppointmentDate - DateTime.Now.AddMonths(months)).Days;
+                            var hours = timeRemaining.Hours;
+                            var minutes = timeRemaining.Minutes;
+
+                            // Display the remaining time correctly
+                            timeRemainingText = $"{months} Months {days} Days {hours} Hours {minutes} Minutes";
+                        }
+
+                        <tr data-appointment-time="@item.AppointmentDate.ToString("o")">
+                            <!-- Using ISO 8601 format for the data attribute -->
+                            <td>@item.Name</td>
+                            <td>@timeRemainingText</td>
+                            <td>@(item.IsDeleted ? "Deleted" : "Active")</td>
+                            <td>
+                                <a asp-controller="Appointment" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                                <a asp-controller="Appointment" asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                                <a href="javascript:void(0)" data-id="@item.Id" class="btn btn-danger btn-sm delete-btn">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section script {
+    <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#appointmentsTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'excel', 'pdf'
+                ]
+            });
+
+            // Delete button functionality
+            const elements = document.querySelectorAll(".delete-btn");
+            elements.forEach(function (button) {
+                button.addEventListener("click", async () => {
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: "btn btn-success",
+                            cancelButton: "btn btn-danger"
+                        },
+                        buttonsStyling: false
+                    });
+
+                    swalWithBootstrapButtons.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, cancel!",
+                        reverseButtons: true
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            const id = button.dataset.id;
+                            const response = await fetch(`/Dashboard/Appointment/DeleteConfirmed/${id}`, {
+                                method: 'POST',
+                                headers: {
+                                    "Content-Type": "application/json"
+                                }
+                            });
+
+                            if (response.ok) {
+                                $(button).closest("tr").remove(); // Remove the deleted row
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted successfully',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                // Handle errors if the deletion fails
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'There was a problem deleting the appointment.'
+                                });
+                            }
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons.fire({
+                                title: "Cancelled",
+                                text: "Your imaginary file is safe :)",
+                                icon: "error"
+                            });
+                        }
+                    });
+                });
+            });
+
+            // Display current and appointment times in the console for debugging
+            var currentTime = new Date();
+            console.log(`Current Time: ${currentTime}`);
+
+            document.querySelectorAll("tr[data-appointment-time]").forEach(function(row) {
+                var appointmentTime = new Date(row.getAttribute("data-appointment-time"));
+                console.log(`Appointment Time: ${appointmentTime}`);
+            });
+        });
+    </script>
+}

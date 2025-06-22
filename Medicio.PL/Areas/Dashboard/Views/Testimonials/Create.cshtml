@@ -1,0 +1,66 @@
+﻿@model  TestimonialsFormVM
+@section Header {
+    Testimonials
+}
+@section loc {
+    create
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Create</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form asp-controller="Testimonials" asp-action="Create" enctype="multipart/form-data">
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter Testimonials Name">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description">Description</label>
+                    <input asp-for="Description" class="form-control " placeholder="Enter Testimonials Description">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job">Job</label>
+                    <input asp-for="Job" class="form-control " placeholder="Enter Testimonials Description">
+                </div>
+                <div class="form-group">
+                        <label asp-for="Image"></label>
+                        <input asp-for="Image" class="form-control imageinput">
+                    </div>
+                    <div class="form-group">
+                        <img src="#" id="imagePreview" style="display:none" />
+                    </div>
+                
+
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">create</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section script {
+    
+    <script>
+        document.querySelector(".imageinput").addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            const imagePreview = document.querySelector("#imagePreview");
+            if(file){
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.style.display = "block";
+                    imagePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+            console.log(imagePreview);
+
+
+        })
+    </script>
+}

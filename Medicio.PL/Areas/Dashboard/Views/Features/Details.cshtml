@@ -1,0 +1,29 @@
+﻿@model FeaturesDetailsVM
+@section Header {
+    Features
+
+}
+@section loc {
+    details
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Details for @Model.Name</h3>
+        </div>
+        <ul>
+            <li>
+                Description : @Model.Description
+            </li>
+            <li>
+                CreatedAT : @Model.CreatedAT
+            </li>
+            <li>
+                status : @(Model.IsDeleted ? "Deleted" : "Active")
+            </li>
+            <li>
+                icon <i class="@Model.Icon"></i>
+            </li>
+        </ul>
+    </div>
+</div>

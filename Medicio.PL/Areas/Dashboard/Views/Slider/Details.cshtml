@@ -1,0 +1,28 @@
+﻿@model SliderDetailsVM
+@section Header{
+    Slider
+
+}
+@section loc {
+    details
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Details for Slider</h3>
+        </div>
+       <ul>
+           <li>title @Model.Title</li>
+    <li>
+                Description :@Html.Raw(@Model.Description)
+    </li>
+            
+            <li>
+                status : @(Model.Isdeleted ? "Deleted" : "Active")
+            </li>
+            <li>
+                imge : <img src="~/Files/images/Slider/@Model.ImageName" alt="Alternate Text" width="100px" />
+            </li>
+</ul>
+    </div>
+</div>

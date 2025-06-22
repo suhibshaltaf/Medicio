@@ -1,0 +1,48 @@
+﻿@model FeaturesFormVM
+@section Header {
+    Features
+}
+@section loc {
+    edit
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Edit</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form asp-controller="Features" asp-action="Edit">
+
+            <div class="card-body">
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter Features Name">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description">Description</label>
+                    <input asp-for="Description" class="form-control" placeholder="Enter Features Description">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Icon">Icon <i class="@Model.Icon"></i></label>
+                    
+                    
+                    <input asp-for="Icon" class="form-control" placeholder="Enter Features Icon">
+                    
+                </div>
+                <div class="form-group">
+                    <label asp-for="IsDeleted"></label>
+                    <input asp-for="IsDeleted">
+                    <span>@(Model.IsDeleted ? "Deleted" : "Active")</span>
+                </div>
+
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">update</button>
+            </div>
+        </form>
+    </div>
+</div>

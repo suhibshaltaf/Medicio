@@ -1,0 +1,98 @@
+﻿@model AppointmentFormVM
+
+@section Header {
+    Edit Appointment
+}
+
+@section loc {
+    edit
+}
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Edit Appointment</h3>
+        </div>
+        <form asp-controller="Appointment" asp-action="Edit">
+            <div class="card-body">
+                <input type="hidden" asp-for="Id" /> <!-- Hidden field for Id -->
+
+                <div class="form-group">
+                    <label asp-for="DepartmentId">Department</label>
+                    <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.Departments" onchange="getDoctors(this.value)">
+                        <option value="">Select Department</option> <!-- خيار افتراضي -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DoctorId">Doctor</label>
+                    <select asp-for="DoctorId" class="form-control" asp-items="ViewBag.Doctors" id="doctorSelect">
+                        <option value="">Select Doctor</option> <!-- خيار افتراضي -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter Name" required />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter Email" type="email" required />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Phone">Phone</label>
+                    <input asp-for="Phone" class="form-control" placeholder="Enter Phone" required />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AppointmentDate">Appointment Date</label>
+                    <input asp-for="AppointmentDate" class="form-control" type="date" required />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Message">Message</label>
+                    <textarea asp-for="Message" class="form-control" placeholder="Enter Message"></textarea>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section script {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function getDoctors(departmentId) {
+            if (departmentId) {
+                $.ajax({
+                    url: '@Url.Action("GetDoctorsByDepartment", "Appointment")',
+                    type: 'GET',
+                    data: { departmentId: departmentId },
+                    success: function (data) {
+                        var doctorSelect = $('#doctorSelect');
+                        doctorSelect.empty(); // مسح الخيارات السابقة
+
+                        doctorSelect.append($('<option>').text('Select Doctor').attr('value', '')); // خيار افتراضي
+                        if (data.length === 0) {
+                            doctorSelect.append($('<option>').text('No doctors available').attr('value', '')); // إعلام بعدم وجود أطباء
+                        } else {
+                            $.each(data, function (index, doctor) {
+                                doctorSelect.append($('<option>').text(doctor.Name).attr('value', doctor.Id));
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert('Error loading doctors');
+                    }
+                });
+            } else {
+                // إذا لم يتم اختيار قسم، قم بمسح خيارات الأطباء
+                $('#doctorSelect').empty().append($('<option>').text('Select Doctor').attr('value', ''));
+            }
+        }
+    </script>
+}

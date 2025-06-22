@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<partial name="_head" />
+
+<body class="index-page">
+
+    <partial name="_navmenu" />
+
+    <main class="main">
+        @RenderBody()
+
+    </main>
+
+    <partial name="_footer" />
+
+    <partial name="_script" />
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

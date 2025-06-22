@@ -1,0 +1,101 @@
+﻿@model AppointmentFormVM
+
+@section Header {
+    Create Appointment
+}
+
+@section loc {
+    create
+}
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Create Appointment</h3>
+        </div>
+        <form asp-controller="Appointment" asp-action="Create">
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="DepartmentId">Department</label>
+                    <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.Departments" id="DepartmentId">
+                        <option value="">Select Department</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DoctorId">Doctor</label>
+                    <select asp-for="DoctorId" class="form-control" id="DoctorId">
+                        <option value="">Select Doctor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter Name" required>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter Email" type="email" required>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone">Phone</label>
+                    <input asp-for="Phone" class="form-control" placeholder="Enter Phone" required>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AppointmentDate">Appointment Date</label>
+                    <input asp-for="AppointmentDate" class="form-control" type="date" required>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Message">Message</label>
+                    <textarea asp-for="Message" class="form-control" placeholder="Enter Message"></textarea>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section script {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var departmentSelect = document.getElementById('DepartmentId');
+            var doctorSelect = document.getElementById('DoctorId');
+
+            departmentSelect.addEventListener('change', function () {
+                var departmentId = this.value;
+                console.log("Selected Department ID: " + departmentId); // عرض القيمة المحددة
+
+                // التأكد من أن القيمة المختارة ليست فارغة
+                if (departmentId) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', '@Url.Action("GetDoctorsByDepartment", "Appointment")?departmentId=' + departmentId, true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            var data = JSON.parse(xhr.responseText);
+                            console.log("Doctors data received: ", data); // عرض البيانات المستلمة
+
+                            doctorSelect.innerHTML = ''; // إفراغ قائمة الاختيار
+                            doctorSelect.appendChild(new Option('Select Doctor', '')); // خيار افتراضي
+
+                            // التأكد من أن البيانات ليست فارغة
+                            if (data.length > 0) {
+                                data.forEach(function (doctor) {
+                                    doctorSelect.appendChild(new Option(doctor.name, doctor.id));
+                                });
+                            } else {
+                                doctorSelect.appendChild(new Option('No Doctors Available', '')); // رسالة إذا لم يكن هناك أطباء
+                            }
+                        } else if (xhr.readyState === 4) {
+                            console.error("Error fetching doctors: ", xhr.statusText);
+                        }
+                    };
+                    xhr.send();
+                } else {
+                    doctorSelect.innerHTML = ''; // إفراغ قائمة الاختيار إذا لم يتم تحديد قسم
+                    doctorSelect.appendChild(new Option('Select Doctor', ''));
+                }
+            });
+        });
+    </script>
+}

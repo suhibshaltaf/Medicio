@@ -1,0 +1,32 @@
+﻿@model DoctorDetailsVM
+@section Header {
+    Doctor
+
+}
+@section loc {
+    details
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Details for @Model.Name</h3>
+        </div>
+        <ul>
+
+            <li>
+                CreatedAT : @Model.CreatedAT
+            </li>
+            <li>
+                status : @(Model.IsDeleted ? "Deleted" : "Active")
+            </li>
+            <li>
+                status :@Model.DepartmentName
+
+            </li>
+            <li>
+                imge : <img src="~/Files/images/Doctors/@Model.ImageName" alt="Alternate Text" width="100px" />
+            </li>
+        </ul>
+    </div>
+</div>
+<h1>Doctor's Appointments</h1>

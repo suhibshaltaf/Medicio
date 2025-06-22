@@ -1,0 +1,80 @@
+﻿@model DepartmentsFormVM
+@section Header {
+    Departments
+}
+@section loc {
+    edit
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Edit</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form asp-controller="Departments" asp-action="Edit" enctype="multipart/form-data">
+
+            <div class="card-body">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="ImageName" />
+                <div class="form-group">
+                    <label asp-for="Title">Title</label>
+                    <input asp-for="Title" class="form-control" placeholder="Enter Department Title">
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="line">Line</label>
+                    <input asp-for="line" class="form-control" placeholder="Enter Department Line">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Tabs">Tabs</label>
+                    <input asp-for="Tabs" class="form-control" placeholder="Enter Departments Tabs">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description">Description</label>
+                    <input asp-for="Description" class=" form-control" placeholder="Enter Department Description">
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="IsDeleted"></label>
+                    <input asp-for="IsDeleted">
+                    <span>@(Model.IsDeleted ? "Deleted" : "Active")</span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Image">Image</label>
+                    <input asp-for="Image" class="form-control imageinput" type="file">
+                </div>
+
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <img src="~/Files/images/Departments/@Model.ImageName" id="imagePreview" style="max-width: 200px; display: @(string.IsNullOrEmpty(Model.ImageName) ? "none" : "block");" />
+                </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section script {
+
+
+    <script>
+        document.querySelector(".imageinput").addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            const imagePreview = document.querySelector("#imagePreview");
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.style.display = "block";
+                    imagePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

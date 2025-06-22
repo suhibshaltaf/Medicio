@@ -1,0 +1,86 @@
+﻿@model PricingFormVM
+@section Header {
+    Pricing
+}
+@section loc {
+    create
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Create</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form id="create-form" asp-controller="Pricing" asp-action="Create">
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="Type">Type</label>
+                    <input asp-for="Type" class="form-control" placeholder="Enter Type ">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price">Price</label>
+                    <input asp-for="Price" class="form-control " placeholder="Enter Price ">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Features">Features</label>
+                    <div id="feature-fields">
+                        <input asp-for="Features" class="form-control mb-2" placeholder="Enter Features ">
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="add-feature">Add New Feature</button>
+                </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section script {
+    <script>
+        // Add new feature input
+        document.getElementById('add-feature').addEventListener('click', function () {
+            var featureFields = document.getElementById('feature-fields');
+            var lastFeatureInput = featureFields.querySelector('input:last-child');
+
+            // Check if the last input field is empty
+            if (lastFeatureInput && lastFeatureInput.value.trim() === "") {
+                alert("Please fill out the last feature before adding a new one.");
+                return;
+            }
+
+            // Create new input field if the last one is filled
+            var newFeatureInput = document.createElement('input');
+            newFeatureInput.name = "Features";
+            newFeatureInput.classList.add('form-control', 'mb-2');
+            newFeatureInput.placeholder = "Enter Features";
+            featureFields.appendChild(newFeatureInput);
+        });
+
+        // Prevent form submission if any input is empty
+        document.getElementById('create-form').addEventListener('submit', function (event) {
+            // Get all input fields inside the form (including features)
+            var inputs = document.querySelectorAll('#create-form input');
+            var isValid = true;
+
+            // Check if any input is empty
+            inputs.forEach(function (input) {
+                if (input.value.trim() === "") {
+                    isValid = false;
+                    input.classList.add('is-invalid'); // Add class for visual feedback (optional)
+                } else {
+                    input.classList.remove('is-invalid'); // Remove invalid class if field is valid
+                }
+            });
+
+            // Prevent form submission if any field is invalid
+            if (!isValid) {
+                alert("Please fill out all fields before submitting.");
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    </script>
+}

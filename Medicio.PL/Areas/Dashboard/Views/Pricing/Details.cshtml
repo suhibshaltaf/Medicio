@@ -1,0 +1,31 @@
+﻿@model PricingDetailsVM
+@section Header {
+    Pricing
+}
+@section loc {
+    details
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Details for @Model.Type</h3>
+        </div>
+        <ul>
+            <li>
+                Price: @Model.Price
+            </li>
+            <li>
+                Features:
+                <ul>
+                    @foreach (var feature in Model.Features)
+                    {
+                        <li>@feature</li>
+                    }
+                </ul>
+            </li>
+            <li>
+                Status: @(Model.IsDeleted ? "Deleted" : "Active")
+            </li>
+        </ul>
+    </div>
+</div>

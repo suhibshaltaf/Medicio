@@ -1,0 +1,36 @@
+﻿@model QuestionsVM
+@section Header {
+    Questions
+}
+@section loc {
+    create
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Create</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form asp-controller="Questions" asp-action="Create" enctype="multipart/form-data">
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="questions">Questions</label>
+                    <input asp-for="questions" class="form-control" placeholder="Enter Questions ">
+                </div>
+                <div class="form-group">
+                    <label asp-for="answer">answer</label>
+                    <input asp-for="answer" class="form-control " placeholder="Enter answer ">
+                </div>
+                
+                
+
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">create</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿@model QuestionsVM
+@section Header {
+    Questions
+
+}
+@section loc {
+    details
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Details for questions</h3>
+        </div>
+        <ul>
+            <li>
+                questions : @Model.questions
+            </li>
+            <li>
+                answer : @Model.answer
+            </li>
+            <li>
+
+                status : @(Model.IsDeleted ? "Deleted" : "Active")
+            </li>
+           
+        </ul>
+    </div>
+</div>

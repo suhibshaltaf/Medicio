@@ -1,0 +1,24 @@
+﻿@model AppointmentDetailsVM
+@section Header {
+    Appointment Details
+}
+@section loc {
+    details
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Details for Appointment</h3>
+        </div>
+        <ul>
+            <li>Name: @Model.Name</li>
+            <li>Email: @Model.Email</li>
+            <li>Phone: @Model.Phone</li>
+            <li>Appointment Date: @Model.AppointmentDate.ToString("dd/MM/yyyy")</li>
+            <li>Message: @Model.Message</li>
+            <li>Doctor: @Model.DoctorName</li>
+            <li>Department: @Model.DepartmentTitle</li>
+            <li>Status: @(Model.IsDeleted ? "Deleted" : "Active")</li>
+        </ul>
+    </div>
+</div>

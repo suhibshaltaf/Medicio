@@ -1,0 +1,32 @@
+﻿@model TestimonialsDetailsVM
+@section Header {
+    Testimonials
+
+}
+@section loc {
+    details
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Details for @Model.Name</h3>
+        </div>
+        <ul>
+            <li>
+                Description :@Html.Raw( @Model.Description)
+            </li>
+            <li>
+                Job : @Model.Job
+            </li>
+            <li>
+                CreatedAT : @Model.CreatedAT
+            </li>
+            <li>
+                status : @(Model.IsDeleted ? "Deleted" : "Active")
+            </li>
+            <li>
+                imge : <img src="~/Files/images/Testimonials/@Model.ImageName" alt="Alternate Text" width="100px" />
+            </li>
+        </ul>
+    </div>
+</div>
