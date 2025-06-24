@@ -4,20 +4,30 @@
 <section id="hero" class="hero section">
     <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
 
-        @foreach (var slider in Model.Sliders)
+        @if (Model.Sliders != null && Model.Sliders.Any())
         {
-        <div class="carousel-item active">
-           
-     
-                <img src="~/Files/images/Slider/@slider.ImageName" alt="">
+            var isFirst = true;
+            foreach (var slider in Model.Sliders)
+            {
+        <div class="carousel-item @(isFirst ? "active" : "")">
+            <img src="~/Files/images/Slider/@slider.ImageName" alt="">
             <div class="container">
                 <h2>@slider.Title</h2>
-<p>@Html.Raw( @slider.Description)</p>                <a href="#about" class="btn-get-started">Read More</a>
-
-                </div>
-        </div><!-- End Carousel Item -->
+                <p>@Html.Raw(slider.Description)</p>
+                <a href="#about" class="btn-get-started">Read More</a>
+            </div>
+        </div>
+                isFirst = false;
             }
-       
+        }
+        else
+        {
+        <div class="carousel-item active">
+            <div class="container text-center">
+                    <h2>There is no data to display at this time.</h2>
+            </div>
+        </div>
+        }
 
         <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
             <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
@@ -30,7 +40,6 @@
         <ol class="carousel-indicators"></ol>
 
     </div>
-
 </section><!-- /Hero Section -->
 <!-- Featured Services Section -->
 <section id="featured-services" class="featured-services section">
@@ -183,35 +192,44 @@
 </section><!-- /Stats Section -->
 <!-- Features Section -->
 <section id="features" class="features section">
-
     <div class="container">
-
         <div class="row justify-content-around gy-4">
-            <div class="features-image col-lg-6" data-aos="fade-up" data-aos-delay="100"><img src="~/Files/img/features.jpg" alt=""></div>
+            <div class="features-image col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <img src="~/Files/img/features.jpg" alt="">
+            </div>
 
             <div class="col-lg-5 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
                 <h3>Enim quis est voluptatibus aliquid consequatur fugiat</h3>
-                <p>Esse voluptas cumque vel exercitationem. Reiciendis est hic accusamus. Non ipsam et sed minima temporibus laudantium. Soluta voluptate sed facere corporis dolores excepturi</p>
-                @foreach (var feath in Model.Features)
+                <p>
+                    Esse voluptas cumque vel exercitationem. Reiciendis est hic accusamus.
+                    Non ipsam et sed minima temporibus laudantium. Soluta voluptate sed facere corporis dolores excepturi
+                </p>
+
+                @if (Model.Features != null && Model.Features.Any())
                 {
-
-                    <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="300">
-                        <i class="fa-solid @feath.Icon  flex-shrink-0"></i>
+                    foreach (var feath in Model.Features)
+                    {
+                <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fa-solid @feath.Icon flex-shrink-0"></i>
                     <div>
-                        <h4><a href="" class="stretched-link">@feath.Name</a></h4>
-                        <p> @Html.Raw(feath.Description)</p>
+                        <h4><a href="#" class="stretched-link">@feath.Name</a></h4>
+                        <p>@Html.Raw(feath.Description)</p>
                     </div>
-                </div>           }
-<!-- End Icon Box -->
-
-               
+                </div>
+                    }
+                }
+                else
+                {
+                <div class="alert alert-warning mt-3" role="alert">
+                        There are no properties to display at this time.
+                    </div>
+                }
 
             </div>
         </div>
-
     </div>
-
-</section><!-- /Features Section -->
+</section>
+<!-- /Features Section -->
 <!-- Services Section -->
 <section id="services" class="services section">
 
@@ -222,31 +240,37 @@
     </div><!-- End Section Title -->
 
     <div class="container">
-
         <div class="row gy-4">
-
-            @foreach(var serv in Model.Services){
+            @if (Model.Services != null && Model.Services.Any())
+            {
+                foreach (var serv in Model.Services)
+                {
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                <div class="service-item  position-relative">
+                <div class="service-item position-relative">
                     <div class="icon">
                         <i class="fas @serv.Icon"></i>
                     </div>
                     <a href="#" class="stretched-link">
-                            <h3> @serv.Name</h3>
+                        <h3>@serv.Name</h3>
                     </a>
-                    <p>@Html.Raw(@serv.Description)</p>
+                    <p>@Html.Raw(serv.Description)</p>
                 </div>
-            </div>}<!-- End Service Item -->
-
-         
-
-           
-
+            </div>
+                }
+            }
+            else
+            {
+            <div class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                        There are no services available at the moment.
+                    </div>
+            </div>
+            }
         </div>
-
     </div>
 
-</section><!-- /Services Section -->
+</section>
+<!-- /Services Section -->
 <!-- Appointment Section -->
 <section id="appointment" class="appointment section light-background">
     <div class="container section-title" data-aos="fade-up">
@@ -275,22 +299,38 @@
                     <input type="datetime-local" asp-for="AppointmentDate" class="form-control datepicker" id="date" required="">
                     <span asp-validation-for="AppointmentDate" class="text-danger"></span>
                 </div>
+
                 <div class="col-md-4 form-group mt-3">
                     <select asp-for="DepartmentId" class="form-select" required="">
                         <option value="">Select Department</option>
-                        @foreach (var department in Model.Departments)
+                        @if (Model.Departments != null && Model.Departments.Any())
                         {
-                            <option value="@department.Id">@department.Title</option>
+                            foreach (var department in Model.Departments)
+                            {
+                        <option value="@department.Id">@department.Title</option>
+                            }
+                        }
+                        else
+                        {
+                        <option disabled>No Departments Available</option>
                         }
                     </select>
                     <span asp-validation-for="DepartmentId" class="text-danger"></span>
                 </div>
+
                 <div class="col-md-4 form-group mt-3">
                     <select asp-for="DoctorId" class="form-select" required="">
                         <option value="">Select Doctor</option>
-                        @foreach (var doctor in Model.Doctors)
+                        @if (Model.Doctors != null && Model.Doctors.Any())
                         {
-                            <option value="@doctor.Id">@doctor.Name</option>
+                            foreach (var doctor in Model.Doctors)
+                            {
+                        <option value="@doctor.Id">@doctor.Name</option>
+                            }
+                        }
+                        else
+                        {
+                        <option disabled>No Doctors Available</option>
                         }
                     </select>
                     <span asp-validation-for="DoctorId" class="text-danger"></span>
@@ -312,7 +352,8 @@
             </div>
         </form>
     </div>
-</section><!-- /Appointment Section -->
+</section>
+<!-- /Appointment Section -->
 
 <script>
     // Set today's date as the default for the appointment date input
@@ -352,30 +393,30 @@
                 'Accept': 'application/json'
             }
         })
-        .then(response => {
-            if (response.ok) {
-                document.getElementById('successMessage').innerText = 'Your appointment request has been sent successfully. Thank you!';
-                document.getElementById('successMessage').style.display = 'block'; // Show success message
-                document.getElementById('remainingDaysMessage').innerText = `Days remaining until your appointment: ${daysRemaining}`;
-                document.getElementById('remainingDaysMessage').style.display = 'block'; // Show remaining days message
-                this.reset(); // Reset the form fields
-                document.querySelector('.error-message').style.display = 'none'; // Hide error message
-            } else {
-                // Handle error by showing error message
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('successMessage').innerText = 'Your appointment request has been sent successfully. Thank you!';
+                    document.getElementById('successMessage').style.display = 'block'; // Show success message
+                    document.getElementById('remainingDaysMessage').innerText = `Days remaining until your appointment: ${daysRemaining}`;
+                    document.getElementById('remainingDaysMessage').style.display = 'block'; // Show remaining days message
+                    this.reset(); // Reset the form fields
+                    document.querySelector('.error-message').style.display = 'none'; // Hide error message
+                } else {
+                    // Handle error by showing error message
+                    document.querySelector('.error-message').style.display = 'block';
+                    document.querySelector('.error-message').innerText = 'There was an error submitting your appointment. Please try again.';
+                    document.getElementById('successMessage').style.display = 'none'; // Hide success message if there was an error
+                    document.getElementById('remainingDaysMessage').style.display = 'none'; // Hide remaining days message if there was an error
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Show error message on catch
                 document.querySelector('.error-message').style.display = 'block';
                 document.querySelector('.error-message').innerText = 'There was an error submitting your appointment. Please try again.';
                 document.getElementById('successMessage').style.display = 'none'; // Hide success message if there was an error
                 document.getElementById('remainingDaysMessage').style.display = 'none'; // Hide remaining days message if there was an error
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // Show error message on catch
-            document.querySelector('.error-message').style.display = 'block';
-            document.querySelector('.error-message').innerText = 'There was an error submitting your appointment. Please try again.';
-            document.getElementById('successMessage').style.display = 'none'; // Hide success message if there was an error
-            document.getElementById('remainingDaysMessage').style.display = 'none'; // Hide remaining days message if there was an error
-        });
+            });
     });
 </script>
 
@@ -389,42 +430,52 @@
     </div><!-- End Section Title -->
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
+        @if (Model.Departments != null && Model.Departments.Any())
+        {
         <div class="row">
             <div class="col-lg-3">
                 <ul class="nav nav-tabs flex-column">
                     @for (var i = 0; i < Model.Departments.Count; i++)
-                    {
-                        var dep = Model.Departments[i];
-                        <li class="nav-item">
-                            <a class="nav-link @(i == 0 ? "active show" : "")" data-bs-toggle="tab" href="#@dep.Tabs">@dep.Title</a>
-                        </li>
-                    }
+                        {
+                            var dep = Model.Departments[i];
+                    <li class="nav-item">
+                        <a class="nav-link @(i == 0 ? "active show" : "")" data-bs-toggle="tab" href="#@dep.Tabs">@dep.Title</a>
+                    </li>
+                        }
                 </ul>
             </div>
+
             <div class="col-lg-9 mt-4 mt-lg-0">
                 <div class="tab-content">
                     @for (var i = 0; i < Model.Departments.Count; i++)
-                    {
-                        var dep = Model.Departments[i];
-                        <div class="tab-pane fade @(i == 0 ? "active show" : "")" id="@dep.Tabs">
-                            <div class="row">
-                                <div class="col-lg-8 details order-2 order-lg-1">
-                                    <h3>@dep.Title</h3>
-                                    <p class="fst-italic">@dep.line</p>
-                                    <p>@Html.Raw(dep.Description)</p>
-                                </div>
-                                <div class="col-lg-4 text-center order-1 order-lg-2">
-                                    <img src="~/Files/images/Departments/@dep.ImageName" alt="" class="img-fluid">
-                                </div>
+                        {
+                            var dep = Model.Departments[i];
+                    <div class="tab-pane fade @(i == 0 ? "active show" : "")" id="@dep.Tabs">
+                        <div class="row">
+                            <div class="col-lg-8 details order-2 order-lg-1">
+                                <h3>@dep.Title</h3>
+                                <p class="fst-italic">@dep.line</p>
+                                <p>@Html.Raw(dep.Description)</p>
+                            </div>
+                            <div class="col-lg-4 text-center order-1 order-lg-2">
+                                <img src="~/Files/images/Departments/@dep.ImageName" alt="" class="img-fluid">
                             </div>
                         </div>
-                    }
+                    </div>
+                        }
                 </div>
             </div>
         </div>
+        }
+        else
+        {
+        <div class="alert alert-info text-center mt-4">
+                There are no sections available at the moment.
+            </div>
+        }
     </div>
-
-</section><!-- /Tabs Section -->
+</section>
+<!-- /Tabs Section -->
 <!-- Testimonials Section -->
 <section id="testimonials" class="testimonials section">
 
@@ -436,6 +487,8 @@
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
 
+        @if (Model.Testimonials != null && Model.Testimonials.Any())
+        {
         <div class="swiper init-swiper" data-speed="600" data-delay="5000" data-breakpoints="{ &quot;320&quot;: { &quot;slidesPerView&quot;: 1, &quot;spaceBetween&quot;: 40 }, &quot;1200&quot;: { &quot;slidesPerView&quot;: 3, &quot;spaceBetween&quot;: 40 } }">
             <script type="application/json" class="swiper-config">
                 {
@@ -464,31 +517,38 @@
             </script>
             <div class="swiper-wrapper">
 
-                @foreach(var tes in Model.Testimonials){
+                @foreach(var tes in Model.Testimonials)
+                    {
                 <div class="swiper-slide">
                     <div class="testimonial-item">
                         <p>
-                            <i class=" bi bi-quote quote-icon-left"></i>
+                            <i class="bi bi-quote quote-icon-left"></i>
                             <span>@tes.Description</span>
                             <i class="bi bi-quote quote-icon-right"></i>
                         </p>
-
 
                         <img src="~/Files/images/Testimonials/@tes.ImageName" class="testimonial-img" alt="" />
                         <h3>@tes.Name</h3>
                         <h4>@tes.Job</h4>
                     </div>
                 </div><!-- End testimonial item -->
-                }
-               
+                    }
 
             </div>
             <div class="swiper-pagination"></div>
         </div>
+        }
+        else
+        {
+        <div class="alert alert-warning text-center">
+                There are no display certificates currently.
+            </div>
+        }
 
     </div>
 
-</section><!-- /Testimonials Section -->
+</section>
+<!-- /Testimonials Section -->
 <!-- Doctors Section -->
 <section id="doctors" class="doctors section light-background">
 
@@ -502,7 +562,10 @@
 
         <div class="row gy-4">
 
-            @foreach(var doc in Model.Doctors){
+            @if (Model.Doctors != null && Model.Doctors.Any())
+            {
+                foreach(var doc in Model.Doctors)
+                {
             <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
                 <div class="team-member">
                     <div class="member-img">
@@ -520,13 +583,23 @@
                     </div>
                 </div>
             </div><!-- End Team Member -->
+                }
+            }
+            else
+            {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                        There are no doctors available at this time.
+                    </div>
+            </div>
             }
 
         </div>
 
     </div>
 
-</section><!-- /Doctors Section -->
+</section>
+<!-- /Doctors Section -->
 <!-- Gallery Section -->
 <section id="gallery" class="gallery section">
 
@@ -597,42 +670,57 @@
     <div class="container">
 
         <div class="row gy-3">
-            @foreach (var pric in Model.PricingPlans)
+            @if (Model.PricingPlans != null && Model.PricingPlans.Any())
             {
-                <div class="col-xl-3 col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="pricing-item">
-                        <h3>@pric.Type</h3>
-                        <!-- استخدام ToString("0") لعرض السعر بدون كسور عشرية -->
-                        <h4><sup>$</sup>@pric.Price.ToString("0")<span> / month</span></h4>
-                        <ul>
-                            @foreach (var feature in pric.Features)
-                            {
-                                if (feature.StartsWith("!"))
+                foreach (var pric in Model.PricingPlans)
+                {
+            <div class="col-xl-3 col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="pricing-item">
+                    <h3>@pric.Type</h3>
+                    <!-- استخدام ToString("0") لعرض السعر بدون كسور عشرية -->
+                    <h4><sup>$</sup>@pric.Price.ToString("0")<span> / month</span></h4>
+                    <ul>
+                        @if (pric.Features != null && pric.Features.Any())
                                 {
-                                    <li class="na">@feature.Substring(1)</li> <!-- إزالة '!' من النص عند العرض -->
+                                    foreach (var feature in pric.Features)
+                                    {
+                                        if (feature.StartsWith("!"))
+                                        {
+                        <li class="na">@feature.Substring(1)</li>
+ <!-- إزالة '!' من النص عند العرض -->
+                                        }
+                                        else
+                                        {
+                        <li>@feature</li>
+                                        }
+                                    }
                                 }
                                 else
                                 {
-                                    <li>@feature</li>
+                        <li>No features listed.</li>
                                 }
-                            }
-                        </ul>
-                        <div class="btn-wrap">
-                            <a href="#" class="btn-buy">Buy Now</a>
-                        </div>
+                    </ul>
+                    <div class="btn-wrap">
+                        <a href="#" class="btn-buy">Buy Now</a>
                     </div>
                 </div>
-
-                <!-- End Pricing Item -->
+            </div>
+                }
             }
-
-
-           
+            else
+            {
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                        There are no pricing plans available at this time.
+                    </div>
+            </div>
+            }
         </div>
 
     </div>
 
-</section><!-- /Pricing Section -->
+</section>
+<!-- /Pricing Section -->
 <!-- Faq Section -->
 <section id="faq" class="faq section light-background">
 
@@ -649,17 +737,27 @@
             <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
 
                 <div class="faq-container">
-                    @foreach (var qus in Model.FAQ)
+                    @if (Model.FAQ != null && Model.FAQ.Any())
                     {
-                        <div class="faq-item">
-                            <h3>@qus.questions</h3>
+                        foreach (var qus in Model.FAQ)
+                        {
+                    <div class="faq-item">
+                        <h3>@qus.questions</h3>
                         <div class="faq-content">
                             <p>@qus.answer</p>
                         </div>
                         <i class="faq-toggle bi bi-chevron-right"></i>
-                    </div><!-- End Faq item-->}
+                    </div><!-- End Faq item-->
+                        }
+                    }
+                    else
+                    {
+                    <div class="alert alert-info text-center">
+                            There are no FAQs to display at this time.
 
-                    
+
+                        </div>
+                    }
                 </div>
 
             </div><!-- End Faq Column-->
@@ -668,7 +766,8 @@
 
     </div>
 
-</section><!-- /Faq Section -->
+</section>
+<!-- /Faq Section -->
 <!-- Contact Section -->
 <section id="contact" class="contact section">
 

@@ -36,6 +36,10 @@
                     <label asp-for="Image"></label>
                     <input asp-for="Image" class="form-control">
                 </div>
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <img src="~/Files/images/Slider/@Model.ImageName" id="imagePreview" style="max-width: 200px; display: @(string.IsNullOrEmpty(Model.ImageName) ? "none" : "block");" />
+                </div>
             </div>
             <!-- /.card-body -->
 
