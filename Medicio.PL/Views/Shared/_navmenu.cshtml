@@ -47,7 +47,16 @@
             </nav>
 
             <!-- Appointment Button -->
-            <a class="cta-btn" href="#appointment">Make an Appointment</a>
+@if (User.Identity.IsAuthenticated)
+{
+    <!-- لو مسجل دخول، يذهب للقسم -->
+    <a class="cta-btn" href="#appointment">Make an Appointment</a>
+}
+else
+{
+    <!-- لو مش مسجل دخول، يوجه لصفحة تسجيل الدخول -->
+    <a class="cta-btn" href="/Account/Login">Make an Appointment</a>
+}
 
             <!-- Logout Button if Signed In -->
             @if (SignInManager.IsSignedIn(User))
