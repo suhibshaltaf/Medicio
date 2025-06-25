@@ -319,21 +319,20 @@
                 </div>
 
                 <div class="col-md-4 form-group mt-3">
-                    <select asp-for="DoctorId" class="form-select" required="">
+                    <select asp-for="DoctorId" class="form-select" required disabled>
                         <option value="">Select Doctor</option>
                         @if (Model.Doctors != null && Model.Doctors.Any())
                         {
                             foreach (var doctor in Model.Doctors)
                             {
-                        <option value="@doctor.Id">@doctor.Name</option>
+                                <option value="@doctor.Id">@doctor.Name</option>
                             }
                         }
                         else
                         {
-                        <option disabled>No Doctors Available</option>
+                            <option disabled>No Doctors Available</option>
                         }
-                    </select>
-                    <span asp-validation-for="DoctorId" class="text-danger"></span>
+                    </select>                    <span asp-validation-for="DoctorId" class="text-danger"></span>
                 </div>
             </div>
 
@@ -356,6 +355,51 @@
 <!-- /Appointment Section -->
 
 <script>
+      document.addEventListener("DOMContentLoaded", function () {
+            const departmentSelect = document.querySelector("[name='DepartmentId']");
+            const doctorSelect = document.querySelector("[name='DoctorId']");
+
+            // ابدأ الحقل مغلق
+            doctorSelect.disabled = true;
+
+            departmentSelect.addEventListener("change", function () {
+                const departmentId = this.value;
+
+                if (!departmentId) {
+                    doctorSelect.disabled = true;
+                    doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+                    return;
+                }
+
+                // عرض تحميل
+                doctorSelect.innerHTML = '<option>Loading...</option>';
+                doctorSelect.disabled = true;
+
+                fetch(`/Dashboard/Appointment/GetDoctorsByDepartment?departmentId=${departmentId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        doctorSelect.innerHTML = "";
+                        if (data.length === 0) {
+                            doctorSelect.disabled = true;
+                            doctorSelect.innerHTML = '<option disabled selected>No Doctors Available</option>';
+                        } else {
+                            doctorSelect.disabled = false;
+                            doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+                            data.forEach(doctor => {
+                                const option = document.createElement("option");
+                                option.value = doctor.id;
+                                option.textContent = doctor.name;
+                                doctorSelect.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching doctors:", error);
+                        doctorSelect.disabled = true;
+                        doctorSelect.innerHTML = '<option disabled selected>Error loading doctors</option>';
+                    });
+            });
+        });
     // Set today's date as the default for the appointment date input
     document.addEventListener('DOMContentLoaded', function () {
         const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format

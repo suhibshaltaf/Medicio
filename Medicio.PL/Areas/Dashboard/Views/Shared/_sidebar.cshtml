@@ -37,7 +37,10 @@
                      with font-awesome or any other icon font library -->
                
                
-                 <li class="nav-item">
+                @if (User.IsInRole("Admin"))
+
+                {
+                    <li class="nav-item">
 
                     <a asp-controller="Services" asp-action="Index" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
@@ -46,8 +49,11 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
-                </li>
-                <li class="nav-item">
+                </li>}
+                    @if (User.IsInRole("Admin"))
+
+                    {
+                        <li class="nav-item">
 
                     <a asp-controller="Departments" asp-action="Index" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
@@ -56,8 +62,11 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
-                </li>
-                 <li class="nav-item">
+                </li>}
+                        @if (User.IsInRole("Admin"))
+
+                        {
+                            <li class="nav-item">
 
                     <a asp-controller="Doctor" asp-action="Index" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
@@ -66,8 +75,11 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
-                </li>
-                <li class="nav-item">
+                </li>}
+                            @if (User.IsInRole("Admin"))
+
+                            {
+                                <li class="nav-item">
 
                     <a asp-controller="Testimonials" asp-action="Index" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
@@ -76,10 +88,11 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
-                </li>
-               
+                </li>}
+                                @if (User.IsInRole("Admin"))
 
-                <li class="nav-item">
+                                {
+                                    <li class="nav-item">
 
                     <a asp-controller="Pricing" asp-action="Index" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
@@ -88,8 +101,11 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
-                </li>
-                <li class="nav-item">
+                </li>}
+                                    @if (User.IsInRole("Admin"))
+
+                                    {
+                                        <li class="nav-item">
 
                     <a asp-controller="Questions" asp-action="Index" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
@@ -98,7 +114,7 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
-                </li>
+                </li>}
                 <li class="nav-item">
 
                     <a asp-controller="Appointment" asp-action="Index" class="nav-link">
@@ -109,7 +125,10 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
+                @if (User.IsInRole("Admin"))
+
+                {
+                    <li class="nav-item">
 
                     <a asp-controller="Slider" asp-action="Index" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
@@ -118,8 +137,11 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
-                </li>
-                <li class="nav-item">
+                </li>}
+                @if (User.IsInRole("Admin"))
+
+                {
+                    <li class="nav-item">
 
                     <a asp-controller="Features" asp-action="Index" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
@@ -128,7 +150,7 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
-                </li>
+                </li>}
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
