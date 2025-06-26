@@ -37,22 +37,3 @@
         </form>
     </div>
 </div>
-@section script {
-    <script>
-        document.querySelector(".imageinput").addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            const imagePreview = document.querySelector("#imagePreview");
-            if(file){
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imagePreview.style.display = "block";
-                    imagePreview.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-            console.log(imagePreview);
-
-
-        })
-    </script>
-}

@@ -360,13 +360,29 @@
 <!-- /Appointment Section -->
 
 <script>
-      document.addEventListener("DOMContentLoaded", function () {
-            const departmentSelect = document.querySelector("[name='DepartmentId']");
-            const doctorSelect = document.querySelector("[name='DoctorId']");
+    document.addEventListener("DOMContentLoaded", function () {
+        const departmentSelect = document.querySelector("[name='DepartmentId']");
+        const doctorSelect = document.querySelector("[name='DoctorId']");
+        const appointmentForm = document.getElementById('appointmentForm');
+        const phoneInput = document.getElementById('phone');
+        const dateInput = document.getElementById('date');
+        const errorMessage = document.querySelector('.error-message');
+        const successMessage = document.getElementById('successMessage');
+        const remainingDaysMessage = document.getElementById('remainingDaysMessage');
 
-            // ابدأ الحقل مغلق
+        // ✅ تعيين تاريخ اليوم في حقل الموعد
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+
+        // ✅ تعطيل حقل الأطباء حتى يتم اختيار القسم
+        if (doctorSelect) {
             doctorSelect.disabled = true;
+        }
 
+        // ✅ تحميل الأطباء عند تغيير القسم
+        if (departmentSelect && doctorSelect) {
             departmentSelect.addEventListener("change", function () {
                 const departmentId = this.value;
 
@@ -376,7 +392,6 @@
                     return;
                 }
 
-                // عرض تحميل
                 doctorSelect.innerHTML = '<option>Loading...</option>';
                 doctorSelect.disabled = true;
 
@@ -404,68 +419,59 @@
                         doctorSelect.innerHTML = '<option disabled selected>Error loading doctors</option>';
                     });
             });
-        });
-    // Set today's date as the default for the appointment date input
-    document.addEventListener('DOMContentLoaded', function () {
-        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-        document.getElementById('date').value = today; // Set the value of the date input
-    });
-
-    document.getElementById('appointmentForm').addEventListener('submit', function (event) {
-        // Prevent the default form submission
-        event.preventDefault();
-
-        // Perform client-side validation
-        const phone = document.getElementById('phone').value;
-
-        // Check if phone contains only numbers
-        const phonePattern = /^[0-9]*$/;
-        if (!phonePattern.test(phone)) {
-            document.querySelector('.error-message').style.display = 'block';
-            document.querySelector('.error-message').innerText = 'Please enter a valid phone number.';
-            document.getElementById('successMessage').style.display = 'none'; // Hide success message if there is an error
-            return; // Exit the function if the validation fails
         }
 
-        // Calculate remaining days until the appointment
-        const appointmentDate = new Date(document.getElementById('date').value);
-        const today = new Date();
-        const timeDifference = appointmentDate - today;
-        const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+        // ✅ التحقق من صحة النموذج وإرسال البيانات باستخدام AJAX
+        if (appointmentForm && phoneInput && dateInput && errorMessage && successMessage && remainingDaysMessage) {
+            appointmentForm.addEventListener('submit', function (event) {
+                event.preventDefault();
 
-        // Submit the form using AJAX to prevent full page refresh
-        const formData = new FormData(this);
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('successMessage').innerText = 'Your appointment request has been sent successfully. Thank you!';
-                    document.getElementById('successMessage').style.display = 'block'; // Show success message
-                    document.getElementById('remainingDaysMessage').innerText = `Days remaining until your appointment: ${daysRemaining}`;
-                    document.getElementById('remainingDaysMessage').style.display = 'block'; // Show remaining days message
-                    this.reset(); // Reset the form fields
-                    document.querySelector('.error-message').style.display = 'none'; // Hide error message
-                } else {
-                    // Handle error by showing error message
-                    document.querySelector('.error-message').style.display = 'block';
-                    document.querySelector('.error-message').innerText = 'There was an error submitting your appointment. Please try again.';
-                    document.getElementById('successMessage').style.display = 'none'; // Hide success message if there was an error
-                    document.getElementById('remainingDaysMessage').style.display = 'none'; // Hide remaining days message if there was an error
+                const phone = phoneInput.value.trim();
+                const phonePattern = /^[0-9]*$/;
+
+                if (!phonePattern.test(phone)) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.innerText = 'Please enter a valid phone number.';
+                    successMessage.style.display = 'none';
+                    remainingDaysMessage.style.display = 'none';
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Show error message on catch
-                document.querySelector('.error-message').style.display = 'block';
-                document.querySelector('.error-message').innerText = 'There was an error submitting your appointment. Please try again.';
-                document.getElementById('successMessage').style.display = 'none'; // Hide success message if there was an error
-                document.getElementById('remainingDaysMessage').style.display = 'none'; // Hide remaining days message if there was an error
+
+                const appointmentDate = new Date(dateInput.value);
+                const today = new Date();
+                const timeDifference = appointmentDate - today;
+                const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        successMessage.innerText = 'Your appointment request has been sent successfully. Thank you!';
+                        successMessage.style.display = 'block';
+                        remainingDaysMessage.innerText = `Days remaining until your appointment: ${daysRemaining}`;
+                        remainingDaysMessage.style.display = 'block';
+                        this.reset();
+                        errorMessage.style.display = 'none';
+                    } else {
+                        throw new Error('Network response was not ok.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMessage.style.display = 'block';
+                    errorMessage.innerText = 'There was an error submitting your appointment. Please try again.';
+                    successMessage.style.display = 'none';
+                    remainingDaysMessage.style.display = 'none';
+                });
             });
+        }
     });
 </script>
 
